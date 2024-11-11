@@ -4,7 +4,6 @@ import time
 def test_api():
     base_url = "https://mutant-detector.bluehill-82a8baaa.eastus.azurecontainerapps.io"
     
-    # Test root endpoint first
     print("Testing root endpoint:")
     print("-" * 50)
     try:
@@ -14,7 +13,6 @@ def test_api():
     except Exception as e:
         print(f"Error: {str(e)}\n")
 
-    # Test cases
     test_cases = [
         {
             "name": "Mutant DNA (Horizontal match)",
@@ -51,7 +49,6 @@ def test_api():
         }
     ]
     
-    # Test mutant endpoint with different sequences
     print("Testing /mutant/ endpoint with different sequences:")
     print("-" * 50)
     
@@ -68,19 +65,13 @@ def test_api():
         except Exception as e:
             print(f"Error: {str(e)}")
         
-        # Small delay to avoid overwhelming the API
         time.sleep(1)
     
-    # Test stats endpoint with more debugging
     print("\nTesting /stats/ endpoint:")
     print("-" * 50)
     try:
         stats_url = f"{base_url}/stats/"
-        print(f"Requesting URL: {stats_url}")
         response = requests.get(stats_url)
-        print(f"Status Code: {response.status_code}")
-        print(f"Raw Response: {response.text}")
-        
         if response.status_code == 200:
             stats = response.json()
             print("\nStatistics:")
