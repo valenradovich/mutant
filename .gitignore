@@ -1,0 +1,4 @@
+# add all the python files to the ignore list
+.pytest_cache
+.env
+__pycache__/
