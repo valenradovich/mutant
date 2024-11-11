@@ -5,7 +5,6 @@ import os
 from dotenv import load_dotenv
 import logging
 
-# Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -26,7 +25,7 @@ try:
             "connect_timeout": 30
         }
     )
-    # Test the connection
+    # testing connection
     with engine.connect() as conn:
         logger.info("Successfully connected to the database!")
 except Exception as e:
@@ -42,7 +41,6 @@ class DNA(Base):
     sequence = Column(String, primary_key=True)
     is_mutant = Column(Boolean, nullable=False)
 
-# Create tables
 Base.metadata.create_all(bind=engine)
 
 def get_db():

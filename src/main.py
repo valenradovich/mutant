@@ -33,14 +33,12 @@ def validate_dna_sequence(dna_list: List[str]) -> None:
     n = len(dna_list)
     valid_chars = set('ATCG')
     
-    # Check if it's a square matrix
     if any(len(row) != n for row in dna_list):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid DNA sequence: Not a square matrix"
         )
     
-    # Check for valid characters
     for row in dna_list:
         if not all(c in valid_chars for c in row):
             raise HTTPException(
@@ -52,10 +50,9 @@ def validate_dna_sequence(dna_list: List[str]) -> None:
 async def check_mutant(dna_request: DNARequest, db: Session = Depends(get_db)):
     validate_dna_sequence(dna_request.dna)
     
-    # Convert DNA list to string for storage
+    # converting DNA list to string for storage
     dna_string = get_dna_string(dna_request.dna)
     
-    # Check if DNA has been processed before
     existing_dna = db.query(DNA).filter(DNA.sequence == dna_string).first()
     if existing_dna:
         if existing_dna.is_mutant:
@@ -63,10 +60,10 @@ async def check_mutant(dna_request: DNARequest, db: Session = Depends(get_db)):
         else:
             raise HTTPException(status_code=403, detail="Forbidden: Not a mutant")
     
-    # Process new DNA
+    # processing new DNA
     mutant_result = is_mutant(dna_request.dna)
     
-    # Store result
+    # storing result
     new_dna = DNA(sequence=dna_string, is_mutant=mutant_result)
     db.add(new_dna)
     db.commit()
@@ -78,7 +75,7 @@ async def check_mutant(dna_request: DNARequest, db: Session = Depends(get_db)):
 
 @app.get("/stats/", response_model=Stats)
 async def get_stats(db: Session = Depends(get_db)):
-    # Count distinct sequences
+    # counting distinct sequences
     mutant_count = db.query(DNA).filter(DNA.is_mutant == True).count()
     human_count = db.query(DNA).filter(DNA.is_mutant == False).count()
     

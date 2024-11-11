@@ -75,11 +75,11 @@ def test_duplicate_dna(client):
             "TCACTG"
         ]
     }
-    # First request
+    # request
     response = client.post("/mutant/", json=dna)
     assert response.status_code == 200
     
-    # Duplicate request
+    # duplicate request
     response = client.post("/mutant/", json=dna)
     assert response.status_code == 200
     assert response.json() == {"message": "Mutant detected"}
@@ -94,7 +94,7 @@ def test_stats_empty_db(client):
     }
 
 def test_stats_with_data(client):
-    # Add a mutant
+    # adding a mutant
     mutant_dna = {
         "dna": [
             "ATGCGA",
@@ -107,7 +107,7 @@ def test_stats_with_data(client):
     }
     client.post("/mutant/", json=mutant_dna)
     
-    # Add a human
+    # adding a human
     human_dna = {
         "dna": [
             "ATGCGA",
@@ -128,7 +128,6 @@ def test_stats_with_data(client):
     assert stats["ratio"] == 0.5 
 
 def test_invalid_dna_length(client):
-    """Test DNA sequence with invalid length"""
     dna = {
         "dna": [
             "ATGCGA",
@@ -143,7 +142,6 @@ def test_invalid_dna_length(client):
     assert "Invalid DNA sequence" in response.json()["detail"]
 
 def test_invalid_dna_characters(client):
-    """Test DNA sequence with invalid characters"""
     dna = {
         "dna": [
             "ATGCGA",
@@ -159,7 +157,6 @@ def test_invalid_dna_characters(client):
     assert "Invalid characters found" in response.json()["detail"]
 
 def test_empty_dna(client):
-    """Test empty DNA sequence"""
     dna = {"dna": []}
     response = client.post("/mutant/", json=dna)
     assert response.status_code == 400
@@ -171,7 +168,6 @@ def test_invalid_json_format(client):
     assert response.status_code == 422
 
 def test_non_square_matrix(client):
-    """Test DNA sequence that's not a square matrix"""
     dna = {
         "dna": [
             "ATGCGA",
@@ -275,7 +271,7 @@ def test_stats_calculation_with_duplicates(client):
         "dna": ["ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"]
     }
     
-    # Submit same DNA multiple times
+    # submitting same DNA multiple times
     for _ in range(3):
         client.post("/mutant/", json=mutant_dna)
     
@@ -286,7 +282,6 @@ def test_stats_calculation_with_duplicates(client):
     assert stats["ratio"] == 1.0
 
 def test_concurrent_requests(client):
-    """Test handling of concurrent requests"""
     dna1 = {
         "dna": ["ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"]
     }
